@@ -1,0 +1,80 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0a1114">
+  <title>Sign in – Sentinal AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'login.css' %}">
+  <link rel="icon" href="{% static 'logo.svg' %}" type="image/svg+xml">
+</head>
+<body class="login-page">
+
+  <div class="ambient-field" aria-hidden="true"><canvas id="bg"></canvas></div>
+
+  <header class="app-header">
+    <a class="brand" href="{% url 'login' %}"><img src="{% static '/logo.svg' %}" alt="" width="38" height="38"><div><b>SENTINAL<span>AI</span></b><small>CYBER GUARD</small></div></a>
+  </header>
+
+  <main class="lg-main">
+    <section class="lg-card glass-panel" id="card" data-lock="0">
+      <header class="lg-head">
+        <span class="lg-pill"><i></i>Secure sign-in</span>
+        <h1>Sign in to Sentinal AI</h1>
+        <p class="lg-sub">Enter your application name and ID to continue.</p>
+      </header>
+      <div class="lg-body">
+      {% if messages %}
+      {% for message in messages %}
+        <div class="lg-banner show lg-{{ message.tags|default:'info' }}" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
+          <div>{% if 'error' in message.tags %}<b>Couldn’t sign in</b>{% endif %}<span>{{ message }}</span></div>
+        </div>
+      {% endfor %}
+      {% endif %}
+      <div class="lg-banner lg-error" id="clientBanner" role="alert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
+        <div><b id="bTitle"></b><span id="bText"></span></div>
+      </div>
+
+      <form id="loginForm" method="post" action="{% url 'login' %}" novalidate autocomplete="off">
+        {% csrf_token %}
+
+        <div class="lg-field">
+          <label for="app_name">Application name</label>
+          <div class="lg-input"><input id="app_name" name="app_name" type="text" placeholder="e.g. Sentinal-Core" value="" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="e-name" required></div>
+          <div class="lg-msg" id="e-name"></div>
+        </div>
+
+        <div class="lg-field">
+          <div class="lg-label"><label for="app_id">Application ID</label><span><span>Registered application ID</span></span></div>
+          <div class="lg-input">
+           <input id="app_id" name="app_id" type="password" placeholder="Enter your Application ID" maxlength="40" autocomplete="off" spellcheck="false" aria-describedby="e-id" required>
+            <button type="button" class="lg-eye" id="eye" aria-label="Show application ID" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="lg-seg" id="seg" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="lg-msg" id="e-id"></div>
+        </div>
+
+        <button class="lg-btn" id="verifyBtn" type="submit"><span id="btnLabel">Sign in</span></button>
+      </form>
+
+      </div>
+      <p class="lg-note"><span><b>Authorized use only.</b> Access is monitored and logged.</span></p>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l8 3v7c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V5z"/><path d="M9 12l2 2 4-4"/></svg>SENTINAL AI <i></i>Powered by CYBI — AI Cybersecurity Analyst</span>
+    <span>All times UTC <i></i>v.1.4.2</span>
+  </footer>
+
+  <script src="{% static 'login.js' %}"></script>
+</body>
+</html>

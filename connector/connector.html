@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinal AI Connector</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/connector.css">
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-grid"></div>
+<canvas id="bg-canvas"></canvas>
+<div class="bg-scan"></div>
+<div class="overlay" id="overlay"></div>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar">
+  <div>
+    <div class="brand">
+      <div class="logo"><span class="ms">shield</span></div>
+      <div>
+        <div class="brand-name">SENTINAL AI</div>
+        <div class="brand-sub">Connector</div>
+      </div>
+    </div>
+    <div class="nav-title caps">Control plane</div>
+    <nav class="nav" id="nav">
+      <a href="#" data-page="overview" class="active"><span class="ms">grid_view</span>Overview</a>
+      <a href="#" data-page="applications"><span class="ms">hub</span>Applications</a>
+      <a href="#" data-page="keys"><span class="ms">key</span>API Keys</a>
+      <a href="#" data-page="events"><span class="ms">stream</span>Live Events</a>
+      <a href="#" data-page="logs"><span class="ms">terminal</span>Connection Logs</a>
+    </nav>
+  </div>
+  <div class="side-foot">
+    <button class="logout" id="logout-btn"><span class="ms sm">logout</span>Log out</button>
+    <div class="status-box">
+      <div class="row"><span class="online"><i class="dot pulse"></i>Connector online</span><span class="muted mono-s">:9000</span></div>
+      <div class="row muted"><span class="caps">Core runtime</span><span class="chip">v1.0.0</span></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ================= SHELL ================= -->
+<div class="shell">
+<header class="topbar">
+  <div class="top-left">
+    <button class="icon-btn menu" id="menu-btn" aria-label="Toggle sidebar" aria-expanded="true" aria-controls="sidebar"><span class="ms">menu_open</span></button>
+    <div class="crumb"><span>Sentinal AI</span><span class="faint">/</span><b>Connector</b></div>
+  </div>
+  <div class="top-right">
+    <span class="pill"><i class="dot pulse"></i>Engine online</span>
+    <div class="user">
+      <div class="who"><b>SOC_ADMIN</b><small>Tier-1 ops</small></div>
+      <div class="avatar">AK</div>
+      <button class="icon-btn" id="logout-top" aria-label="Log out" title="Log out"><span class="ms">logout</span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ OVERVIEW ============ -->
+<section class="page active" id="page-overview">
+  <div class="page-head">
+    <div class="eyebrow">Connector intelligence</div>
+    <h1>Connector overview</h1>
+    <p class="lead">Real-time health and telemetry status for the Sentinal AI Connector.</p>
+    <div class="head-line"></div>
+  </div>
+
+  <div class="grid4">
+    <div class="card stat">
+      <div class="row"><span class="caps">Connector status</span><span class="ms sm pri">cloud_done</span></div>
+      <div class="conn-pill" id="connector-status" data-state="idle">-</div>
+    </div>
+    <div class="card stat">
+      <div class="row"><span class="caps">Events received</span><span class="ms sm pri">stream</span></div>
+      <div class="big" id="events-count">0</div>
+    </div>
+    <div class="card stat">
+      <div class="row"><span class="caps">Active incidents</span><span class="ms sm pri">warning</span></div>
+      <div class="big" id="incident-count">0</div>
+    </div>
+    <div class="card stat">
+      <div class="row"><span class="caps">Connected applications</span><span class="ms sm pri">hub</span></div>
+      <div class="big" id="application-count">0</div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="card sec">
+      <h2><span class="ms sm pri">hub</span>Application connection</h2>
+      <div class="kv"><small>Application</small><span id="application-name">-</span></div>
+      <div class="kv"><small>Last event</small><span id="last-event">-</span></div>
+    </div>
+    <div class="card sec">
+      <h2><span class="ms sm pri">warning</span>Incidents</h2>
+      <div id="incidents-list"><div class="empty-state">No active incidents.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPLICATIONS ============ -->
+<section class="page" id="page-applications">
+  <div class="page-head">
+    <div class="eyebrow">Connected applications</div>
+    <h1>Applications</h1>
+    <p class="lead">Applications authorized to send security telemetry to Sentinal AI.</p>
+    <div class="head-line"></div>
+  </div>
+  <div class="card sec">
+    <div class="row">
+      <h2><span class="ms sm pri">lan</span>Application registry</h2>
+      <span class="muted mono-s">Live API data</span>
+    </div>
+    <div id="applications-list"><div class="empty-state">Waiting for connector API...</div></div>
+  </div>
+</section>
+
+<!-- ============ API KEYS : APPLICATION CONNECTION ============ -->
+<section class="page" id="page-keys">
+  <div class="page-head">
+    <div class="eyebrow">Authentication</div>
+    <h1>Application connection</h1>
+    <p class="lead">Register an application and verify its API key against the Sentinal Connector.</p>
+    <div class="head-line"></div>
+  </div>
+
+  <div class="conn-wrap">
+    <div class="card sec" id="key-connect-card">
+      <div class="sec-head">
+        <div class="sec-ic"><span class="ms">cable</span></div>
+        <div><small>Connect</small><h2>Application connection</h2></div>
+        <span class="chip" id="key-state">NOT CONNECTED</span>
+      </div>
+
+      <form id="key-form" autocomplete="off" novalidate>
+        <div class="fields">
+          <label class="field">
+            <span>Application name</span>
+            <div class="input"><span class="ms sm">apps</span>
+              <input id="app-name" type="text" placeholder="e.g. Hanu AI" autocomplete="off"></div>
+          </label>
+          <label class="field">
+            <span>Application URL</span>
+            <div class="input"><span class="ms sm">link</span>
+              <input id="app-url" type="text" placeholder="https://your-app.example.com" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+          </label>
+
+          <label class="field full">
+            <span>Sentinal API key</span>
+            <div class="input">
+              <span class="ms sm">vpn_key</span>
+              <input id="key-input" type="password" placeholder="Paste your API key" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="key-hint">
+              <button type="button" class="icon-b" id="key-toggle" title="Show / hide key" aria-label="Show or hide key"><span class="ms sm">visibility</span></button>
+              <button type="button" class="icon-b" id="key-paste" title="Paste from clipboard" aria-label="Paste from clipboard"><span class="ms sm">content_paste</span></button>
+            </div>
+          </label>
+
+          <label class="field full">
+            <span>Sentinal Connector URL</span>
+            <div class="input"><span class="ms sm">router</span>
+              <input id="connector-url" type="text" placeholder="http://127.0.0.1:9000" value="http://127.0.0.1:9000" autocomplete="off" autocapitalize="off" spellcheck="false">
+              <button type="button" class="icon-b" id="connector-copy" title="Copy URL" aria-label="Copy connector URL"><span class="ms sm">content_copy</span></button></div>
+          </label>
+        </div>
+
+        <p class="note" id="key-hint">
+          Sent as the <span class="mono-s pri">X-Sentinal-API-Key</span> header. Kept only for this browser session and cleared when you close the tab.
+        </p>
+
+        <div class="key-msg" id="key-msg" role="status" aria-live="polite" hidden></div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary verify" id="key-connect"><span class="ms sm">verified_user</span> Verify connection</button>
+          <button type="button" class="btn" id="key-disconnect" hidden><span class="ms sm">link_off</span> Disconnect</button>
+          <button type="button" class="btn warn" id="key-flush" title="Delete all stored events and applications"><span class="ms sm">delete_sweep</span> Flush all data</button>
+          <button type="button" class="btn danger" id="key-revoke" disabled title="Connect an API key to enable"><span class="ms sm">block</span> Revoke connection</button>
+        </div>
+        <p class="note" id="revoke-hint">
+          <b>Disconnect</b> only forgets the key in this browser. <b>Flush all data</b> permanently deletes every stored event and registered application (the events and applications JSON) on the Connector, so old data disappears from the dashboard. It asks for the Connector admin key. <b>Revoke connection</b> invalidates the connected key, so the application can no longer send telemetry.
+        </p>
+      </form>
+
+      <div class="kv" id="key-saved-row" hidden>
+        <small>Connected key</small>
+        <span class="mono-s pri" id="key-masked">-</span>
+      </div>
+    </div>
+
+    <div class="card status-card" id="status-card" data-state="idle">
+      <span class="caps">Connection status</span>
+      <div class="orb" id="orb" data-state="idle">
+        <i class="ring r1"></i><i class="ring r2"></i><i class="ring r3"></i><i class="sweep"></i>
+        <div class="core">
+          <span class="ms ic i-idle">shield</span>
+          <span class="ms ic i-ver">radar</span>
+          <span class="ms ic i-ok">verified</span>
+          <span class="ms ic i-bad">gpp_bad</span>
+        </div>
+      </div>
+      <div class="status-label" id="status-label">NOT CONNECTED</div>
+      <div class="steps">
+        <div class="step"><i></i>Reach connector</div>
+        <div class="step"><i></i>Authenticate API key</div>
+        <div class="step"><i></i>Secure telemetry channel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIVE EVENTS ============ -->
+<section class="page" id="page-events">
+  <div class="page-head">
+    <div class="eyebrow">Real-time telemetry</div>
+    <h1>Live events</h1>
+    <p class="lead">Events actually received by the Sentinal AI Connector.</p>
+    <div class="head-line"></div>
+  </div>
+  <div class="card sec">
+    <div class="row">
+      <h2><span class="ms sm pri">stream</span>Event stream</h2>
+      <span class="online"><i class="dot pulse"></i>Connector API</span>
+    </div>
+    <div id="events-list"><div class="empty-state">No events received yet.</div></div>
+  </div>
+</section>
+
+<!-- ============ CONNECTION LOGS ============ -->
+<section class="page" id="page-logs">
+  <div class="page-head">
+    <div class="eyebrow">Diagnostic stream</div>
+    <h1>Connection logs</h1>
+    <p class="lead">Monitor connector communication, telemetry ingestion and integration events.</p>
+    <div class="head-line"></div>
+  </div>
+
+  <div class="card filters">
+    <div class="search-row">
+      <div class="search"><span class="ms sm">search</span><input id="search" type="text" placeholder="Search logs..."></div>
+      <button class="link" id="clear-search">Clear</button>
+      <button class="btn" id="download-btn"><span class="ms sm">file_download</span>Download .log</button>
+    </div>
+    <div class="chips" id="chips">
+      <button class="fchip active" data-filter="ALL">All</button>
+      <button class="fchip" data-filter="INFO"><i class="dot"></i>Info</button>
+      <button class="fchip" data-filter="WARNING"><i class="dot t"></i>Warning</button>
+      <button class="fchip" data-filter="ERROR"><i class="dot e"></i>Error</button>
+    </div>
+  </div>
+
+  <div class="logs-grid">
+    <div class="terminal-card">
+      <div class="term-bar"><span><span class="ms sm pri">terminal</span> Connector log stream</span><span class="muted mono-s">JSON</span></div>
+      <div class="terminal" id="terminal"></div>
+      <div class="term-bar foot"><span class="online"><i class="dot pulse"></i>Connector port 9000</span><span id="count-label">Displaying 0 events</span></div>
+    </div>
+
+    <div class="card inspector">
+      <h2><span class="ms sm pri">troubleshoot</span>Log inspector</h2>
+      <div class="insp-body">
+        <div class="row"><span class="caps">Active selection</span><span class="lvl INFO" id="i-level">INFO</span></div>
+        <div class="kv"><small>Timestamp</small><span id="i-time">-</span></div>
+        <div class="kv"><small>Source module</small><span class="pri" id="i-module">-</span></div>
+        <div class="kv"><small>Message</small><p id="i-msg">Select a log entry.</p></div>
+        <div class="two">
+          <div class="kv box"><small>Remote IP</small><span id="i-ip">N/A</span></div>
+          <div class="kv box"><small>Status</small><span class="err" id="i-code">-</span></div>
+        </div>
+      </div>
+      <div class="caps">Troubleshooting actions</div>
+      <button class="action" id="diag-btn"><span><span class="ms sm pri">network_check</span>Run diagnostics</span><span class="ms sm muted">arrow_forward</span></button>
+      <button class="action" id="flush-btn"><span><span class="ms sm">cleaning_services</span>Flush logs</span><span class="ms sm muted">arrow_forward</span></button>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- ================= SIGNED OUT ================= -->
+<div class="signed-out" id="signed-out" hidden>
+  <div class="so-card">
+    <span class="ms big-ic">lock</span>
+    <h1>You've been logged out</h1>
+    <p class="lead">Your session has ended.</p>
+    <button class="btn primary" id="signin-btn">Sign in again</button>
+  </div>
+</div>
+
+<script src="static/connector.js"></script>
+</body>
+</html>

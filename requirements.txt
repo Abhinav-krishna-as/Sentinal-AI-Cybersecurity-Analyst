@@ -1,0 +1,12 @@
+﻿fastapi
+uvicorn[standard]
+python-dotenv
+mysql-connector-python
+langchain
+langchain-groq
+langchain-nvidia-ai-endpoints
+langchain-openrouter
+psutil
+reportlab
+requests
+python-multipart

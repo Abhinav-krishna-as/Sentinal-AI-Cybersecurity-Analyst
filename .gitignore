@@ -1,0 +1,40 @@
+﻿# Secrets and environment variables
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Databases and private data
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# IDE and OS files
+.idea/
+.DS_Store
+Thumbs.db
+
+# Nested Git repository
+/Sentinal-AI-Cybersecurity-Analyst/
+
+# Local database
+django_web/db.sqlite3
+
+# Generated incident reports and runtime state
+reports/cybi_incidents/
+reports/cybi_automation_state.json
+reports/cybi_automation_settings.json
+
+# Generated CYBI reports and runtime state
+reports/cybi_incidents/
+reports/cybi_automation_settings.json
+reports/cybi_automation_state.json
