@@ -84,6 +84,12 @@ Its purpose is to assist security analysis—not to replace human review,
 security testing, or incident-response expertise.
 
 ---
+## 🏗️ System Architecture
+
+Sentinal AI integrates application telemetry, cybersecurity analysis, and the Cybi AI Analyst to support security monitoring.
+
+![Sentinal AI System Architecture](architecture.png)
+
 
 ## 🏗️ System Architecture
 
